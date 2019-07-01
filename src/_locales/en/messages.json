@@ -1,0 +1,11 @@
+{
+    "name": {
+        "message": "Extension boilerplate webpack"
+    },
+    "description": {
+        "message": "Extension boilerplate with webpack"
+    },
+    "short_name": {
+        "message": "extension-boilerplate-webpack"
+    }
+}

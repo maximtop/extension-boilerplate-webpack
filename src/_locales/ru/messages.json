@@ -1,0 +1,11 @@
+{
+    "name": {
+        "message": "Шаблон расширения webpack"
+    },
+    "description": {
+        "message": "Шаблон расширения со сборкой webpack"
+    },
+    "short_name": {
+        "message": "extension-boilerplate-webpack"
+    }
+}
