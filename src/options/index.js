@@ -1,5 +1,8 @@
-const App = require('./components/App');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/App';
 
-const root = document.querySelector('#root');
-
-root.innerHTML = App();
+ReactDOM.render(
+  <App />,
+  document.getElementById('root'),
+);
