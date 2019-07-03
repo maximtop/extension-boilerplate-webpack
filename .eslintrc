@@ -13,6 +13,7 @@
           ".jsx"
         ]
       }
-    ]
+    ],
+    "import/no-extraneous-dependencies": 0
   }
 }

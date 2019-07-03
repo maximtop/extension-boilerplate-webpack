@@ -2,62 +2,18 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { SRC_PATH } = require('./consts');
+const { getOutputPathByEnv } = require('./helpers');
 
-const pJson = require('./package.json');
-
-const ENV_MAP = {
-  development: { outputPath: 'dev', name: 'Dev' },
-  beta: { outputPath: 'beta', name: 'Beta' },
-  release: { outputPath: 'release', name: '' },
-};
-const SRC_PATH = 'src';
-const BACKGROUND_PATH = path.join(__dirname, SRC_PATH, 'background');
-const OPTIONS_PATH = path.join(__dirname, SRC_PATH, 'options');
-const POPUP_PATH = path.join(__dirname, SRC_PATH, 'popup');
-const CONTENT_SCRIPTS_PATH = path.join(__dirname, SRC_PATH, 'content-scripts');
-const LOCALES_PATH = path.join(__dirname, SRC_PATH, '_locales/en/messages');
+const BACKGROUND_PATH = path.resolve(__dirname, SRC_PATH, 'background');
+const OPTIONS_PATH = path.resolve(__dirname, SRC_PATH, 'options');
+const POPUP_PATH = path.resolve(__dirname, SRC_PATH, 'popup');
+const CONTENT_SCRIPTS_PATH = path.resolve(__dirname, SRC_PATH, 'content-scripts');
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
-const getOutputPathByEnv = (env) => {
-  const envData = ENV_MAP[env];
-  if (!envData) {
-    throw new Error(`Wrong environment: ${env}`);
-  }
-  return envData.outputPath;
-};
-
-const BUILD_PATH = 'build';
+const BUILD_PATH = '../build';
 const OUTPUT_PATH = getOutputPathByEnv(process.env.NODE_ENV);
-
-const getNameByEnv = (env) => {
-  // eslint-disable-next-line import/no-dynamic-require, global-require
-  const locales = require(LOCALES_PATH);
-  if (!locales) {
-    throw new Error(`Wrong path to locales ${LOCALES_PATH}`);
-  }
-  const { name } = locales;
-
-  const envData = ENV_MAP[env];
-  if (!envData) {
-    throw new Error(`Wrong environment: ${env}`);
-  }
-
-  return `${name.message} ${envData.name}`;
-};
-
-const updateManifest = (content) => {
-  const manifest = JSON.parse(content.toString());
-  const devPolicy = IS_DEV ? { content_security_policy: "script-src 'self' 'unsafe-eval'; object-src 'self'" } : {};
-  const name = getNameByEnv(process.env.NODE_ENV);
-  const updatedManifest = {
-    ...manifest,
-    ...devPolicy,
-    name,
-    version: pJson.version,
-  };
-  return Buffer.from(JSON.stringify(updatedManifest, null, 2));
-};
 
 const config = {
   mode: IS_DEV ? 'development' : 'production',
@@ -95,12 +51,6 @@ const config = {
   plugins: [
     new CleanWebpackPlugin(),
     new CopyWebpackPlugin([
-      {
-        from: 'manifest.json',
-        context: 'src',
-        // eslint-disable-next-line no-shadow, no-unused-vars
-        transform: (content, path) => updateManifest(content),
-      },
       {
         context: 'src',
         from: 'assets/',

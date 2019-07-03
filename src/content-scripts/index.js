@@ -1,1 +1,1 @@
-console.log('This string was printed from content-scripts/index.jsx');
+console.log('This string was printed from content-scripts/index.js');
